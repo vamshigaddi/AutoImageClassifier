@@ -41,6 +41,7 @@ To train the model and generate classification results, follow these steps:
 - The application will start training the model on the specified dataset with the provided parameters.
 
 - Once training is complete, the application will generate an output JSON file (output.json) containing detailed results.
+- A 'runs' folder is also generated, which contains the trained model weights.
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
