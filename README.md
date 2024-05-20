@@ -6,6 +6,7 @@ The Auto Image Classifier is an application for image classification using a pre
 - [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
+- [Dataset structure](#dataset-structure)
 - [Usage](#usage)
 - [License](#license)
 
@@ -29,6 +30,24 @@ To use the Auto Image Classifier, follow these steps:
    ```bash
    pip install -r requirements.txt
    ```
+## Dataset structure
+- Your Input dataset structure should look like this before you give to image_classifier.py script
+- This is an Example you can have different folders and different images but structure of dataset should look like this.
+```bash
+Dataset/
+├── Rose/
+│ ├── image1.jpg
+│ ├── image2.jpg
+│ ├── ...
+├── Lilly/
+│ ├── image1.jpg
+│ ├── image2.jpg
+│ ├── ...
+├── Daffodiles/
+│ ├── image1.jpg
+│ ├── image2.jpg
+│ ├── ...
+```
 ##  Usage
 To train the model and generate classification results, follow these steps:
 
