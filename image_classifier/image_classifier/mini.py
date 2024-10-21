@@ -4,8 +4,8 @@ from minio.error import S3Error
 # Initialize MinIO client
 client = Minio(
     'objectstore.e2enetworks.net',
-    access_key='URYEJ1JIYS528KSR9OU2',
-    secret_key='KU3RNZM7HWRV1R0HD13XIFG8LPFHYR1314OAA9WP',
+    access_key='',
+    secret_key='',
     secure=True
 )
 
