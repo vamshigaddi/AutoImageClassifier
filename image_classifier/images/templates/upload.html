@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Images</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <style>
+        .frame {
+            padding: 20px;
+        }
+
+        .center {
+            margin: 0 auto;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        #uploadForm {
+            margin-bottom: 20px;
+        }
+
+        #uploadForm input[type="file"] {
+            margin-right: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        #progressWrapper {
+            margin-top: 20px;
+            display: none;
+        }
+
+        #successMessage {
+            display: none;
+            color: green;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        #successMessage .tick {
+            color: green;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .cursor {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: black;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: background-color 0.2s ease;
+        }
+
+        .cursor.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="frame">
+        <div class="center">
+            <div class="title">
+                <h1>Upload ZIP file</h1>
+            </div>
+
+            <form id="uploadForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="directory" accept=".zip" id="fileInput"/>
+                <button type="submit" class="btn">Upload file</button>
+            </form>
+
+            <!-- Progress bar -->
+            <div id="progressWrapper">
+                <progress id="progressBar" value="0" max="100"></progress>
+                <span id="progressText">0%</span>
+            </div>
+
+            <!-- Success message -->
+            <div id="successMessage">
+                <span class="tick">✅</span>
+                <span>Data uploaded successfully!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom cursor -->
+    <div class="cursor"></div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('mousemove', function(event) {
+            var cursor = document.querySelector('.cursor');
+            if (cursor) {
+                cursor.style.left = event.pageX + 'px';
+                cursor.style.top = event.pageY + 'px';
+            }
+        });
+
+        document.addEventListener('mouseover', function(event) {
+            var cursor = document.querySelector('.cursor');
+            if (cursor) {
+                cursor.classList.remove('hidden');
+            }
+        });
+
+        document.addEventListener('mouseout', function(event) {
+            var cursor = document.querySelector('.cursor');
+            if (cursor) {
+                cursor.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var fileInput = document.querySelector('#fileInput');
+            var file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a file to upload.');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('directory', file);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url "upload_images" %}', true);
+
+            var progressBar = document.getElementById('progressBar');
+            var progressText = document.getElementById('progressText');
+            var progressWrapper = document.getElementById('progressWrapper');
+            var successMessage = document.getElementById('successMessage');
+            var fakeProgress = 0;
+
+            function incrementFakeProgress() {
+                if (fakeProgress < 95) {
+                    fakeProgress++;
+                    progressBar.value = fakeProgress;
+                    progressText.textContent = fakeProgress + '%';
+                    setTimeout(incrementFakeProgress, 100);
+                }
+            }
+
+            incrementFakeProgress();
+
+            xhr.upload.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    var percentComplete = Math.round((event.loaded / event.total) * 100);
+                    progressWrapper.style.display = 'block';
+                    if (percentComplete > fakeProgress) {
+                        fakeProgress = percentComplete;
+                    }
+                }
+            };
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        fakeProgress = 100;
+                        progressBar.value = 100;
+                        progressText.textContent = '100%';
+                        successMessage.style.display = 'block';
+                        // Clear file input, hide success message, and reset progress bar after a delay
+                        setTimeout(function() {
+                            fileInput.value = ''; // Clear the file input
+                            progressBar.value = 0; // Reset the progress bar
+                            progressText.textContent = '0%'; // Reset the progress text
+                            progressWrapper.style.display = 'none'; // Hide the progress wrapper
+                            successMessage.style.display = 'none'; // Hide the success message
+                        }, 3000); // Adjust the delay as needed
+                    } else {
+                        alert('Upload failed.');
+                    }
+                }
+            };
+
+            xhr.send(formData);
+        });
+
+        // Clear progress bar and success message when a new file is selected
+        document.getElementById('fileInput').addEventListener('change', function() {
+            var progressBar = document.getElementById('progressBar');
+            var progressText = document.getElementById('progressText');
+            var progressWrapper = document.getElementById('progressWrapper');
+            var successMessage = document.getElementById('successMessage');
+            var fileInput = document.getElementById('fileInput');
+
+            progressBar.value = 0;
+            progressText.textContent = '0%';
+            progressWrapper.style.display = 'none';
+            successMessage.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Status</title>
+    {% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ADD8E6; /* Light blue background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            position: relative;
+        }
+
+        .center {
+            text-align: center;
+            background-color: #ffffff; /* White background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #cccccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .cursor {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: white;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .results {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .results div {
+            margin-right: 10px;
+        }
+
+        .results div strong {
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1>Check Status</h1>
+        {% if directories %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>URL</th>
+                    <th>Status</th>
+                    <th>Results</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for directory in directories %}
+                <tr>
+                    <td>{{ directory.id }}</td>
+                    <td>{{ directory.name }}</td>
+                    <td><a href="{{ directory.url }}" target="_blank">{{ directory.url }}</a></td>
+                    <td>{{ directory.status }}</td>
+                    <td class="results">
+                        {% if directory.results %}
+                            {% for key, value in directory.results.items %}
+                                <div><strong>{{ key }}:</strong> {{ value }}</div>
+                            {% endfor %}
+                        {% else %}
+                            No results
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No records found.</p>
+        {% endif %}
+    </div>
+
+    <div class="cursor"></div>
+
+    <script>
+        document.addEventListener('mousemove', function(event) {
+            var cursor = document.querySelector('.cursor');
+            if (cursor) {
+                cursor.style.left = event.pageX + 'px';
+                cursor.style.top = event.pageY + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
+
