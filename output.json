@@ -1,0 +1,17 @@
+{
+    "epochs": 1,
+    "learning_rate": 0.01,
+    "batch_size": 16,
+    "train_accuracy": 0.9269406199455261,
+    "test_accuracy": 0.9124423861503601,
+    "num_classes": 3,
+    "class_names": [
+        "daisy",
+        "roses",
+        "dandelion"
+    ],
+    "total_images": 2172,
+    "train_dataset_images": 1736,
+    "test_dataset_images": 217,
+    "valid_dataset_images": 219
+}
