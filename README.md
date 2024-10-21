@@ -16,6 +16,9 @@ The Auto Image Classifier provides a convenient way to perform image classificat
 - Utilizes a pre-trained YOLO model for image classification.
 - Enables training on custom datasets with customizable parameters.
 - Provides detailed training results in an output JSON file.
+## Demo
+[Watch the video](https://www.veed.io/view/cc7bcfbc-5948-47da-88b6-20ac580ce218?panel=share)
+
 
 ## Installation
 To use the Auto Image Classifier, follow these steps:
