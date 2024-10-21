@@ -1,6 +1,5 @@
 # Auto Image Classifier
-
-The Auto Image Classifier is an application for image classification using a pre-trained YOLO (You Only Look Once) model. It allows users to train the model on their own dataset, specifying parameters such as epochs, learning rate, and batch size. After training, the application generates an output JSON file containing detailed results.
+The Auto Image Classifier is an application designed for image classification using a pre-trained YOLO (You Only Look Once) model. Users can upload their dataset files, which are then uploaded to the cloud. The application stores the dataset path in a PostgreSQL database. In the backend, the classification model trains on the uploaded data, allowing users to specify training parameters such as epochs, learning rate, and batch size. After the training process is complete, the application generates an output JSON file containing detailed results, including the status of the training and the trained parameters.
 
 ## Table of Contents
 - [Introduction](#introduction)
